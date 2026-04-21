@@ -17,13 +17,13 @@ class CounterProvider extends ChangeNotifier {
 
   int get counter => _counter;
 
-  void increment() {
-    _counter++;
+  void increment(int value) {
+    _counter += value;
     notifyListeners();
   }
 
-  void decrement() {
-    _counter--;
+  void decrement(int value) {
+    _counter -= value;
     notifyListeners();
   }
 
@@ -133,6 +133,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController _controller =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,22 +160,61 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 20),
+              TextField(
+                controller: _controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: "Enter number",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     onPressed: () {
-                      context
-                          .read<CounterProvider>()
-                          .increment();
+                      int? value = int.tryParse(
+                        _controller.text,
+                      );
+                      if (value == null) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Enter a valid number",
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      context.read<CounterProvider>().increment(
+                        value,
+                      );
                     },
                     icon: const Icon(Icons.add),
                   ),
                   IconButton(
                     onPressed: () {
-                      context
-                          .read<CounterProvider>()
-                          .decrement();
+                      int? value = int.tryParse(
+                        _controller.text,
+                      );
+                      if (value == null) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Enter a valid number",
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      context.read<CounterProvider>().decrement(
+                        value,
+                      );
                     },
                     icon: const Icon(Icons.remove),
                   ),
@@ -193,6 +234,7 @@ class _HomePageState extends State<HomePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Value has been reset")),
           );
+          _controller.clear();
         },
         child: const Text("Reset"),
       ),
