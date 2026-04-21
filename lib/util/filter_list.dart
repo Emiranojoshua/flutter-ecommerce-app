@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/home_page.dart';
+import 'package:ecommerce_app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 
 class FilterList extends StatefulWidget {

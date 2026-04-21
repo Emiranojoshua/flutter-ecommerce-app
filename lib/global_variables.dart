@@ -65,29 +65,4 @@ final List<Map<String, Object>> products = [
   },
 ];
 
-final List<Map<String, Object>> cart = [
-  {
-    "title": "Sports Wear",
-    "prize": 44.2,
-    "sizes": 8,
-    "imageUrl": "assets/images/image_4.jpg",
-    "company": "Nike",
-    "id": 4,
-  },
-  {
-    "title": "Sports Wear",
-    "prize": 44.2,
-    "sizes": 8,
-    "imageUrl": "assets/images/image_4.jpg",
-    "company": "Nike",
-    "id": 4,
-  },
-  {
-    "title": "Sports Wear",
-    "prize": 44.2,
-    "sizes": 8,
-    "imageUrl": "assets/images/image_4.jpg",
-    "company": "Nike",
-    "id": 4,
-  },
-];
+final List<Map<String, Object>> cart = [];

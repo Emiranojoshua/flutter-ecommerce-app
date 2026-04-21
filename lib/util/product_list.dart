@@ -1,7 +1,7 @@
-import 'package:ecommerce_app/filter_list.dart';
+import 'package:ecommerce_app/util/filter_list.dart';
 import 'package:ecommerce_app/global_variables.dart';
-import 'package:ecommerce_app/product_card.dart';
-import 'package:ecommerce_app/product_card_details_page.dart';
+import 'package:ecommerce_app/util/product_card.dart';
+import 'package:ecommerce_app/screens/product_card_details_page.dart';
 import 'package:flutter/material.dart';
 
 class ProductList extends StatefulWidget {
@@ -21,7 +21,6 @@ class _ProductListState extends State<ProductList> {
     // borderSide: BorderSide.none,
   );
 
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(

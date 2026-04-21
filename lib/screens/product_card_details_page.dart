@@ -1,4 +1,6 @@
+import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductCardDetailsPage extends StatefulWidget {
   final Map<String, Object> product;
@@ -101,15 +103,51 @@ class _ProductCardDetailsPageState
                       size: 25,
                       color: Colors.black,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (selectedSize != 0) {
+                        
+                        Provider.of<CartProvider>(
+                          context,
+                          listen: false,
+                        ).addProduct({
+                          "title": widget.product['title'],
+                          "prize": widget.product['prize'],
+                          "sizes": selectedSize,
+                          "imageUrl": widget.product['imageUrl'],
+                          "company": widget.product['company'],
+                          "id": widget.product['id'],
+                        });
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "${widget.product['title']} added successfully",
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Please Select a size",
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.primary,
+                      backgroundColor: selectedSize != 0
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.grey,
                     ),
                     label: Text(
-                      "Add to cart",
+                      selectedSize != 0
+                          ? "Add to cart"
+                          : "Select product size",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
-import 'package:ecommerce_app/cart_page.dart';
-import 'package:ecommerce_app/product_list.dart';
+import 'package:ecommerce_app/screens/cart_page.dart';
+import 'package:ecommerce_app/util/product_list.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
