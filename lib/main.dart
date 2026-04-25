@@ -13,7 +13,7 @@ void main() {
 }
 
 class CounterProvider extends ChangeNotifier {
-  int _counter = 20;
+  int _counter = 0;
 
   int get counter => _counter;
 
