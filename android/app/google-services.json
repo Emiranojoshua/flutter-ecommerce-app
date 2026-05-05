@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "806388050369",
+    "project_id": "emiranonotes",
+    "storage_bucket": "emiranonotes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806388050369:android:7712a99c873601e103a740",
+        "android_client_info": {
+          "package_name": "com.example.ecommerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXA4b4RtnZZ-ZqKAAwBjISvu9PC435FPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

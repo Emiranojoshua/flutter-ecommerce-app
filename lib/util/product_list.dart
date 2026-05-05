@@ -1,5 +1,5 @@
 import 'package:ecommerce_app/util/filter_list.dart';
-import 'package:ecommerce_app/global_variables.dart';
+import 'package:ecommerce_app/util/global_variables.dart';
 import 'package:ecommerce_app/util/product_card.dart';
 import 'package:ecommerce_app/screens/product_card_details_page.dart';
 import 'package:flutter/material.dart';
