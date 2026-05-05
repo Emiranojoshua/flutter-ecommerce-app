@@ -1,8 +1,7 @@
-import 'package:ecommerce_app/firebase_options.dart';
+import 'package:ecommerce_app/services/auth/auth_exception.dart';
+import 'package:ecommerce_app/services/auth/auth_service.dart';
 import 'package:ecommerce_app/util/dialogs.dart';
 import 'package:ecommerce_app/util/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
@@ -34,117 +33,114 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Login"), centerTitle: true),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, asyncSnapshot) {
-          switch (asyncSnapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            case ConnectionState.done:
-              return Center(
-                child: Column(
-                  children: [
-                    TextField(
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        hintText: "Enter your email",
-                      ),
-                      controller: _emailController,
-                    ),
-                    TextField(
-                      obscureText: true,
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      keyboardType:
-                          TextInputType.visiblePassword,
-                      decoration: InputDecoration(
-                        hintText: "Enter your password",
-                      ),
-                      controller: _passwordController,
-                    ),
-                    SizedBox(height: 10),
-                    Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            final email = _emailController.text
-                                .trim();
-                            final password = _passwordController
-                                .text
-                                .trim();
-                            try {
-                              final userCredential =
-                                  await FirebaseAuth.instance
-                                      .signInWithEmailAndPassword(
-                                        email: email,
-                                        password: password,
-                                      );
+      body: Center(
+        child: Column(
+          children: [
+            TextField(
+              autocorrect: false,
+              enableSuggestions: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                hintText: "Enter your email",
+              ),
+              controller: _emailController,
+            ),
+            TextField(
+              obscureText: true,
+              autocorrect: false,
+              enableSuggestions: false,
+              keyboardType: TextInputType.visiblePassword,
+              decoration: InputDecoration(
+                hintText: "Enter your password",
+              ),
+              controller: _passwordController,
+            ),
+            SizedBox(height: 10),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text
+                        .trim();
+                    try {
+                      await AuthService.firebase().logIn(
+                        email: email,
+                        password: password,
+                      );
 
-                              final user = FirebaseAuth
-                                  .instance
-                                  .currentUser;
+                      final user =
+                          AuthService.firebase().currentUser;
 
-                              final emailVerified =
-                                  user?.emailVerified ?? false;
-                                  
-                              if (emailVerified) {
-                                Navigator.of(
-                                  context,
-                                ).pushNamedAndRemoveUntil(
-                                  NOTESROUTE,
-                                  (_) => false,
-                                );
-                                
-                                // return;
-                              } else {
-                                Navigator.of(
-                                  context,
-                                ).pushNamedAndRemoveUntil(
-                                  VERIFYEMAILROUTE,
-                                  (_) => false,
-                                );
-                                
-                              }
-                            } on FirebaseAuthException catch (
-                              e
-                            ) {
-                              await showErrorDialog(
-                                context,
-                                e.code.toString(),
-                              );
-                            }
-                          },
-                          child: Text("Login"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamedAndRemoveUntil(
-                              REGISTERROUTE,
-                              (route) => false,
-                            );
-                          },
-                          child: Text(
-                            "Not registered, Register here",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      final emailVerified =
+                          user?.isEmailVerified ?? false;
+
+                      if (emailVerified) {
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil(
+                          NOTESROUTE,
+                          (_) => false,
+                        );
+
+                        // return;
+                      } else {
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil(
+                          VERIFYEMAILROUTE,
+                          (_) => false,
+                        );
+                      }
+                    } on UserNotLoggedInAuthException {
+                      await showErrorDialog(
+                        context,
+                        "User not logged in",
+                      );
+                    } on WeakPasswordAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Weak password",
+                      );
+                    } on InvalidEmailAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Invalid email",
+                      );
+                    } on EmailAlreadyInUseAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Email already in use",
+                      );
+                    } on GenericAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Authentication error",
+                      );
+                    } catch (e) {
+                      await showErrorDialog(
+                        context,
+                        e.toString(),
+                      );
+                    }
+                  },
+                  child: Text("Login"),
                 ),
-              );
-
-            default:
-              return const Center(child: Text("Loading"));
-          }
-        },
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil(
+                      REGISTERROUTE,
+                      (route) => false,
+                    );
+                  },
+                  child: Text("Not registered, Register here"),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

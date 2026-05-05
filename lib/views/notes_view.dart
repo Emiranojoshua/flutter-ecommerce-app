@@ -1,7 +1,7 @@
+import 'package:ecommerce_app/services/auth/auth_service.dart';
 import 'package:ecommerce_app/util/dialogs.dart';
+import 'package:ecommerce_app/util/enum/menu_item.dart';
 import 'package:ecommerce_app/util/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class NotesView extends StatelessWidget {
@@ -20,7 +20,7 @@ class NotesView extends StatelessWidget {
                   final logout =
                       await showLogoutDialog(context) ?? false;
                   if (logout) {
-                    await FirebaseAuth.instance.signOut();
+                    await AuthService.firebase().logOut();
                     Navigator.of(
                       context,
                     ).pushNamedAndRemoveUntil(
@@ -34,8 +34,8 @@ class NotesView extends StatelessWidget {
             },
             itemBuilder: (context) => [
               PopupMenuItem<MenuItem>(
-                child: const Text("Logout"),
                 value: MenuItem.logout,
+                child: const Text("Logout"),
               ),
             ],
           ),
@@ -48,5 +48,3 @@ class NotesView extends StatelessWidget {
     );
   }
 }
-
-enum MenuItem { logout }

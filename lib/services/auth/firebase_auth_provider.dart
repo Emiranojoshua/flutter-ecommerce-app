@@ -1,8 +1,10 @@
+import 'package:ecommerce_app/firebase_options.dart';
 import 'package:ecommerce_app/services/auth/auth_exception.dart';
 import 'package:ecommerce_app/services/auth/auth_provider.dart';
 import 'package:ecommerce_app/services/auth/auth_user.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
+import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
@@ -101,6 +103,8 @@ class FirebaseAuthProvider implements AuthProvider {
   
   @override
   Future<void> initialize() async {
-    return FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 }

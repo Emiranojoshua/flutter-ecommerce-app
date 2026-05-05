@@ -1,7 +1,7 @@
+import 'package:ecommerce_app/services/auth/auth_exception.dart';
+import 'package:ecommerce_app/services/auth/auth_service.dart';
 import 'package:ecommerce_app/util/dialogs.dart';
 import 'package:ecommerce_app/util/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class VerifyEmailView extends StatelessWidget {
@@ -9,9 +9,6 @@ class VerifyEmailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-                  final verified = user?.emailVerified ?? false;
-                  print(!verified);
     return Scaffold(
       appBar: AppBar(title: const Text("Verify Email")),
       body: Center(
@@ -23,13 +20,36 @@ class VerifyEmailView extends StatelessWidget {
               onPressed: () async {
                 // Handle resending email
                 try {
-                  final user = FirebaseAuth.instance.currentUser;
-                  await user?.sendEmailVerification();
-                  await showErrorDialog(context, "Verification email sent");
-                } on FirebaseAuthException catch (e) {
+                  await AuthService.firebase()
+                      .sendEmailVerification();
                   await showErrorDialog(
                     context,
-                    e.code.toString(),
+                    "Verification email sent",
+                  );
+                } on UserNotLoggedInAuthException {
+                  await showErrorDialog(
+                    context,
+                    "User not logged in",
+                  );
+                } on WeakPasswordAuthException {
+                  await showErrorDialog(
+                    context,
+                    "Weak password",
+                  );
+                } on InvalidEmailAuthException {
+                  await showErrorDialog(
+                    context,
+                    "Invalid email",
+                  );
+                } on EmailAlreadyInUseAuthException {
+                  await showErrorDialog(
+                    context,
+                    "Email already in use",
+                  );
+                } on GenericAuthException {
+                  await showErrorDialog(
+                    context,
+                    "Authentication error",
                   );
                 } catch (e) {
                   await showErrorDialog(context, e.toString());
@@ -39,7 +59,7 @@ class VerifyEmailView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut();
+                await AuthService.firebase().logOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                   LOGINROUTE,
                   (_) => false,

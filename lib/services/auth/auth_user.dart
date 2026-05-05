@@ -1,3 +1,4 @@
+// ignore: library_prefixes
 import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuth show User;
 import 'package:flutter/cupertino.dart';
 
